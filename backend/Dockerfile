@@ -4,10 +4,6 @@ FROM node:lts-alpine
 #Nom
 LABEL NOM SALIEN ARICHE HO POIRIER
 
-#Var d env
-
-ENV DROIT 775
-
 # installe un simple serveur http pour servir un contenu statique
 RUN npm install -g http-server
 
@@ -22,9 +18,6 @@ RUN npm install
 
 # copie les fichiers et dossiers du projet dans le dossier de travail (par exemple : le dossier 'app')
 COPY . .
-
-# construit l'app pour la production en la minifiant
-RUN npm run build
 
 EXPOSE 8080
 CMD [ "http-server", "dist" ]
