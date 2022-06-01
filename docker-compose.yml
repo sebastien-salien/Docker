@@ -1,0 +1,45 @@
+version: '3.3'
+
+services: 
+ mysql:
+  image: mysql:8.0
+  restart: always
+  environment:
+   MYSQL_ROOT_PASSWORD: motdepasse
+   MYSQL_DATABASE: database_development
+  networks:
+   - appnetwork
+  ports:
+    - 3306
+  volumes:
+   - ./docker/mysql/data:/var/lib/mysql
+   - ./sauvegarde_database.sql:/docker-entrypointinitdb.d/sauvegarde_database.sql:ro
+
+ backend:
+  build: ./backend
+  image: backendimage
+  depends_on:
+   - mysql
+  environment:
+   DB_HOST: mysql
+   MYSQL_ROOT_PASSWORD: motdepasse
+   MYSQL_DATABASE: database_development
+  networks:
+   - appnetwork
+  ports:
+   - 8080:8080
+
+ frontend:
+  build: ./frontend
+  image: frontendimage
+  ports:
+   - 4200:8080
+  depends_on:
+    - backend
+
+networks:
+  appnetwork:
+   driver: bridge
+
+volumes:
+ appdata1:
